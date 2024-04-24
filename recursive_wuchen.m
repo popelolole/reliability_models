@@ -1,21 +1,32 @@
-%Weights = [2, 6, 4];
-%P = [0.6, 0.8, 0.7];
-%Reliability = reliability(3, 5, Weights, P)
+A = {Node(1, 2, 0.6), Node(2, 6, 0.8), Node(3, 4, 0.7)};
 
-% M matrix, n & k integers, W array of weights
-function [M] = higashiyama(n, k, W)
+Reliability = higashiyama(3, 5, A)
+
+%W = [1, 3, 2, 2, 5, 3, 7, 3, 10, 4]
+%P = [1.0, 0.9, 0.8, 0.8, 0.7, 0.7, 0.6, 0.5, 0.5, 0.3]
+
+%R = reliability(10, 12, W, P)
+
+
+
+function [R] = higashiyama(n, k, A)
+    M = construct_matrix(n, k, A);
+    R = calculate_reliability(n, k, M, A);
+end
+
+function [M] = construct_matrix(n, k, A)
     M = zeros(n, k);
     M(n-1, k) = 1;
     M(n, k) = 1;
-    if k - W(n) > 0
-        M(n-1, k-W(n)) = 1;
+    if k - A{n}.weight > 0
+        M(n-1, k-A{n}.weight) = 1;
     end
     for i = n-1:-1:2
         for j = 1:k
             if M(i, j) == 1
                 M(i-1, j) = 1;
-                if j - W(i) > 0
-                    M(i-1, j-W(i)) = 1;
+                if j - A{i}.weight > 0
+                    M(i-1, j-A{i}.weight) = 1;
                 end
             end
         end
@@ -23,18 +34,19 @@ function [M] = higashiyama(n, k, W)
     return
 end
 
-% P = array of reliability index for each node
-function [r] = wu_chen(n, k, M, W, P)
+function [r] = calculate_reliability(n, k, M, A)
     R = ones(n + 1, k + 1);
     R(:, 2:end) = 0;
     for i = 2:n+1
         for j = 2:k+1
             if M(i-1, j-1) == 1
-                if j - W(i-1) <= 1
-                    R(i, j) = P(i-1) + (1 - P(i-1)) * R(i - 1, j);
+                if j - A{i-1}.weight <= 1
+                    R(i, j) = (A{i-1}.reliability + ...
+                        (1 - A{i-1}.reliability) * R(i - 1, j));
                 else
-                    R(i, j) = (P(i-1) * R(i-1, j-W(i-1)) ...
-                                + (1-P(i-1)) * R(i-1, j));
+                    R(i, j) = (A{i-1}.reliability * ...
+                        R(i-1, j-A{i-1}.weight) + ...
+                        (1-A{i-1}.reliability) * R(i-1, j));
                 end
             end
         end
@@ -43,7 +55,3 @@ function [r] = wu_chen(n, k, M, W, P)
     return
 end
 
-function [r] = reliability(n, k, W, P)
-    M = higashiyama(n, k, W);
-    r = wu_chen(n, k, M, W, P);
-end

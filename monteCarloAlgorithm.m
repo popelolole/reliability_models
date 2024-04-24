@@ -1,11 +1,11 @@
 clear
 clc
 
-W = [4,7,5];
+W = [2,6,4];
 
-RI = [0.6,0.8,0.5];
+RI = [0.6,0.8,0.7];
 
-k = 8;
+k = 5;
 
 n = 3;
 
@@ -17,9 +17,9 @@ function result = monteCarlo_algorithm(W,RI,k,n,j)
     up = 0;
     down = 0;
     for i = 1:j
-        randNum = rand();
         sum = 0;
         for a = 1:n
+            randNum = rand();
             if randNum <= RI(a)
                 sum = sum + W(a);
             end

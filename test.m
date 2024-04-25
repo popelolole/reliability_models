@@ -1,4 +1,4 @@
-digits(1000);
+digits(100);
 x = vpa(pi)
 y = x/2
 

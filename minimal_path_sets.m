@@ -2,6 +2,7 @@ A = [Node(2, 6, 0.8), Node(3, 4, 0.7), Node(1, 2, 0.6)];
 
 R = mps(A,3,5)
 
+% A: array of Node instances
 function [R] = mps(A,n,k)
     S = find_minimal_path_sets(A,n,k);
     
@@ -17,7 +18,10 @@ function [R] = mps(A,n,k)
     end
     %%%
         
-    % which method is used here is optional
+    % At this point we have R = P(S{1} u S{2} u ... u S{n})
+    % So reliability is calculated using some method, in this case sum of
+    % disjoint products (sdp).
+
     R = sdp_method(S);
 end
 

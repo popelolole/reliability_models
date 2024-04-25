@@ -3,9 +3,18 @@ clc
 
 A = [Node(1, 2, 0.6), Node(2, 6, 0.8), Node(3, 4, 0.7)];
 
-iterations = 100000000; 
+digits(1000)
+
+N = [Node(1, 2, 0.7)];
+
+for i = 1:100
+    N(i) = Node(i, 4, 0.5);
+end
+
+iterations = 1000000; 
 
 r = monte_carlo_simulation(3, 5, A, iterations)
+R = monte_carlo_simulation(100, 200, N, iterations)
 
 function result = monte_carlo_simulation(n,k,A,iterations)
     sys_up = 0;
@@ -31,5 +40,6 @@ function result = monte_carlo_simulation(n,k,A,iterations)
             sys_up = sys_up + 1;
         end
     end
-    result = sys_up/iterations;
+    disp(sys_up)
+    result = vpa(sys_up/iterations);
 end

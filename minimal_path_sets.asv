@@ -9,7 +9,7 @@ end
 
 %R = mps(A,3,5)
 r = mps(A, 3, 8)
-r = mps(B, 5, 30)
+r = mps(B, 5, 35)
 
 % A: array of Node instances
 function [R] = mps(A,n,k)
@@ -56,12 +56,20 @@ function [S] = find_minimal_path_sets(A,n,k)
 end
 
 function [r] = sdp_method(S)
-     r = 0;
+    r = 0;
     for i = 1:length(S)
         inner_expression = {};
         for j = 1:i - 1
+            z1 = S{j};
+            z2 = S{i};
+            for i = 1:length(z1)
+            diff = Node.diff(S{j}, S{i})
+            diff{1}
+            if length(diff) > 1
+                diff{2}
+            end
             inner_expression = Node.union(inner_expression, ...
-                Node.diff(S{j}, S{i}));
+                 {Node.diff(S{j}, S{i})})
         end
         r = r + prob(S{i}) * (probC(inner_expression));
     end
@@ -77,17 +85,12 @@ end
 function result = probC(s)
     result = 1;
     for i = 1:length(s)
-        result = result * (1 - s{i}.reliability);
+        S = s{i}
+        p = 1;
+        for j = 1:length(S)
+            S(j)
+            p = p * S(j).reliability;
+        end
+        result = result * (1 - p);
     end
-    
-    %result = 1;
-    %for i = 1:length(s)
-    %    S = s{i}
-    %    p = 1;
-    %    for j = 1:length(S)
-    %        S(j)
-    %        p = p * S(j).reliability;
-    %    end
-    %    result = result * (1 - p);
-    %end
 end

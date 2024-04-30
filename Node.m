@@ -24,6 +24,25 @@ classdef Node
     end
 
     methods(Static)
+        function [S, n, k] = import_system(path)
+            dataTable = readtable(path);
+
+            disp(dataTable)
+            
+            n = dataTable.n(1);
+            k = dataTable.k(1);
+            
+            S = Node.empty(height(dataTable), 0);
+            
+            for i = 1:height(dataTable)
+                index = dataTable.index(i);
+                weight = dataTable.weight(i);
+                reliability = dataTable.reliability(i);
+                
+                S{i} = Node(index, weight, reliability);
+            end
+        end
+
         function [S] = union(a,b)
             S = {};
             for i = 1:length(a)

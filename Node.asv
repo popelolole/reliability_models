@@ -24,6 +24,8 @@ classdef Node
     end
 
     methods(Static)
+        function [S] = import_system()
+
         function [S] = union(a,b)
             S = {};
             for i = 1:length(a)
@@ -38,17 +40,14 @@ classdef Node
                 end
             end
             for i = 1:length(b)
-                B = b{i};
-                for a = 1:length(B)
-                    ismember = false;
-                    for j = 1:length(S)
-                        if B{i}.index == S{j}.index
-                            ismember = true;
-                        end
+                ismember = false;
+                for j = 1:length(S)
+                    if b{i}.index == S{j}.index
+                        ismember = true;
                     end
-                    if ismember == false
-                        S{end + 1} = B{i};
-                    end
+                end
+                if ismember == false
+                    S{end + 1} = b{i};
                 end
             end
         end

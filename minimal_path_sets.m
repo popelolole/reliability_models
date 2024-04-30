@@ -7,9 +7,11 @@ for i = 1:10
     N(i) = Node(i, 11-i, 0.5);
 end
 
-%R = mps(A,3,5)
+R = mps(A,3,5)
 r = mps(A, 3, 8)
-r = mps(B, 5, 30)
+%r = mps(B, 4, 30)
+
+
 
 % A: array of Node instances
 function [R] = mps(A,n,k)

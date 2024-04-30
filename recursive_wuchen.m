@@ -13,19 +13,23 @@ end
 disp(A)
 
 R = higashiyama(3,8,A)
-R = higashiyama(5, 30, B)
-%R = higashiyama(100, 200, N)
+R = higashiyama(4, 30, B)
+
+tic;
+Result = higashiyama(100, 200, N)
+disp("Elapsed time: " + toc + " s")
+
 
 %W = [1, 3, 2, 2, 5, 3, 7, 3, 10, 4]
 %P = [1.0, 0.9, 0.8, 0.8, 0.7, 0.7, 0.6, 0.5, 0.5, 0.3]
 
 %R = reliability(10, 12, W, P)
 
-
 % A: array of Node instances
 function [R] = higashiyama(n, k, A)
     M = construct_matrix(n, k, A);
     R = calculate_reliability(n, k, M, A);
+    %R_op = calculate_reliability_op(n, k, M, A)
 end
 
 % Generates matrix of 1's and 0's indicating if reliability for the
@@ -54,13 +58,6 @@ function [r] = calculate_reliability(n, k, M, A)
     R = ones(n + 1, k + 1);
     R(:, 2:end) = 0;
 
-    w = [];
-    r = [];
-    for i = 1:length(A)
-        w(end + 1) = A{i}.weight;
-        r(end + 1) = A{i}.reliability;
-    end
-
     for i = 2:n+1
         for j = 2:k+1
             if M(i-1, j-1) == 1
@@ -71,6 +68,36 @@ function [r] = calculate_reliability(n, k, M, A)
                     R(i, j) = sym(A{i-1}.reliability * ...
                         R(i-1, j-A{i-1}.weight) + ...
                         (1 - A{i-1}.reliability) * R(i-1, j));
+                end
+            end
+        end
+    end
+    r = vpa(R(n+1, k+1));
+    return
+end
+
+% optimized version
+function [r] = calculate_reliability_op(n, k, M, A)
+    R = ones(n + 1, k + 1);
+    R(:, 2:end) = 0;
+
+    w = [];
+    r = [];
+    for i = 1:length(A)
+        w(end + 1) = A{i}.weight;
+        r(end + 1) = A{i}.reliability;
+    end
+
+    for i = 2:n+1
+        for j = 2:k+1
+            if M(i-1, j-1) == 1
+                if j - w(i-1) <= 1
+                    R(i, j) = sym(r(i-1) + ...
+                        (1 - r(i-1)) * R(i - 1, j));
+                else
+                    R(i, j) = sym(r(i-1) * ...
+                        R(i-1, j-w(i-1)) + ...
+                        (1 - r(i-1)) * R(i-1, j));
                 end
             end
         end

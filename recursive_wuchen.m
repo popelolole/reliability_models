@@ -1,3 +1,6 @@
+clear
+clc
+
 digits(1000);
 
 [S, n, k] = Node.import_system('test.xlsx');

@@ -43,6 +43,21 @@ classdef Node
             end
         end
 
+        % selection sort
+        function S = sortByWeight(S)
+            for i = 1:length(S)
+                min = i;
+                for j = i:length(S)
+                    if S{min}.weight < S{j}.weight
+                        min = j;
+                    end
+                end
+                tmp = S{i};
+                S{i} = S{min};
+                S{min} = tmp;
+            end
+        end
+
         function [S] = union(a,b)
             S = {};
             for i = 1:length(a)

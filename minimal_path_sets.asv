@@ -1,3 +1,5 @@
+%% WORK IN PROGRESS %%
+
 A = [Node(2, 6, 0.8), Node(3, 4, 0.7), Node(1, 2, 0.6)];
 B = [Node(1, 20, 0.5), Node(2, 17,0.6), Node(3, 15, 0.4), Node(4, 14, 0.8), Node(5, 12, 0.5), Node(6, 10, 0.4)]
 % , Node(5, 12, 0.5), Node(6, 10, 0.4), Node(7, 7, 0.6), Node(8, 5, 0.8), Node(9, 3, 0.5), Node(10, 2, 0.3)
@@ -7,23 +9,11 @@ for i = 1:10
     N(i) = Node(i, 11-i, 0.5);
 end
 
-% Define elements with their probabilities
-element1.probability = 0.8;
-element2.probability = 0.5;
-element3.probability = 0.7;
-
-% Define sets
-set1 = [element1, element2];
-set2 = [element2, element3];
-set3 = [element1, element3];
-
-% Call the function with your sets
-sets = {set1, set2, set3};
-totalProbability = calculateUnionProbability(sets);
-disp(['Probability of union of sets: ', num2str(totalProbability)]);
+[S, n, k] = Node.import_system('test.xlsx')
 
 R = mps(A,3,5)
-%r = mps(A, 3, 8)
+r = mps(A, 3, 8)
+r = mps(S, n, k)
 %r = mps(B, 4, 30)
 
 
@@ -49,24 +39,23 @@ function [R] = mps(A,n,k)
     % disjoint products (sdp).
 
     R = sdp_method(S);
-    %R = calculateUnionProbability(S)
 end
 
 function [S] = find_minimal_path_sets(A,n,k)
     S = {};
     for i = 1:n
         if A(i).weight >= k
-            S{end + 1} = {A(i)};
+            S{end + 1} = A{i};
         else
-            tot = A(i).weight;
+            tot = A{i}.weight;
             Sx = {A(i)};
             for j = i+1:n
-                tot = tot + A(j).weight;
+                tot = tot + A{j}.weight;
                 Sx{end + 1} = A(j);
                 if tot >= k
                     S{end + 1} = Sx;
                     Sx = Sx(1:end-1);
-                    tot = tot - A(j).weight;
+                    tot = tot - A{j}.weight;
                 end
             end
         end
@@ -109,50 +98,3 @@ function result = probC(s)
     %    result = result * (1 - p);
     %end
 end
-
-function totalProbability = calculateUnionProbability(sets)
-    numSets = numel(sets);
-    totalProbability = 0;
-    
-    % Calculate individual set probabilities
-    for i = 1:numSets
-        setProbability = calculateSetProbability(sets{i});
-        totalProbability = totalProbability + setProbability;
-    end
-    
-    % Use inclusion-exclusion principle
-    for i = 1:numSets
-        for j = i+1:numSets
-            intersectionProb = calculateIntersectionProbability(sets{i}, sets{j});
-            if mod(i + j, 2) == 0
-                totalProbability = totalProbability - intersectionProb;
-            else
-                totalProbability = totalProbability + intersectionProb;
-            end
-        end
-    end
-end
-
-function setProbability = calculateSetProbability(set)
-    numElements = numel(set);
-    setProbability = 1;
-    for i = 1:numElements
-        setProbability = setProbability * set(i).probability;
-    end
-end
-
-function intersectionProbability = calculateIntersectionProbability(set1, set2)
-    intersectionProbability = 1;
-    for i = 1:numel(set1)
-        ismember = false;
-        for j = 1:length(set2)
-            if isequal(set1(i),set2(j))
-                ismember = true;
-            end
-        end
-        if ismember
-            intersectionProbability = intersectionProbability * set1(i).probability;
-        end
-    end
-end
-

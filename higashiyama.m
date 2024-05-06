@@ -1,51 +1,3 @@
-A = {Node(1, 2, 0.6), Node(2, 6, 0.8), Node(3, 4, 0.7)};
-B = {Node(1, 20, 0.5), Node(2, 17,0.6), Node(3, 15, 0.4), Node(4, 14, 0.8), Node(5, 12, 0.5), Node(6, 10, 0.4)};
-
-digits(1000);
-
-dataTable = readtable('test.xlsx')
-
-disp(dataTable)
-
-n = dataTable.n(1); % Assuming n is in the first column of the last row
-k = dataTable.k(1); % Assuming k is in the second column of the last row
-
-% Remove the variables n and k from the table
-dataTable = removevars(dataTable, {'n', 'k'});
-
-S = cell(height(dataTable), 1)
-
-for i = 1:height(dataTable)
-    index = dataTable.index(i);
-    weight = dataTable.weight(i);
-    reliability = dataTable.reliability(i);
-    
-    S{i} = Node(index, weight, reliability);
-end
-
-disp(S)
-
-%N = {};
-
-%for i = 1:100
-%    N{i} = Node(i, 4, 0.5);
-%end
-
-%disp(A)
-
-%R = higashiyama(3,8,A)
-%R = higashiyama(4, 30, B)
-
-tic;
-Result = higashiyama(n, k, S)
-disp("Elapsed time: " + toc + " s")
-
-
-%W = [1, 3, 2, 2, 5, 3, 7, 3, 10, 4]
-%P = [1.0, 0.9, 0.8, 0.8, 0.7, 0.7, 0.6, 0.5, 0.5, 0.3]
-
-%R = reliability(10, 12, W, P)
-
 % A: array of Node instances
 function [R] = higashiyama(n, k, A)
     M = construct_matrix(n, k, A);
@@ -126,4 +78,3 @@ function [r] = calculate_reliability_op(n, k, M, A)
     r = vpa(R(n+1, k+1));
     return
 end
-

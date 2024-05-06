@@ -1,6 +1,8 @@
 clear
 clc
 
+digits(1000);
+
 [S, n, k] = Node.import_system('test.xlsx');
 
 W = zeros(n); 
@@ -15,9 +17,13 @@ combinations = zeros(2^n, n);
 
 initial_combination = zeros(1, n);
 
+tic;
+
 combinations = brute_force_enumeration1(initial_combination, 1, 1, n, combinations);
 
 system_reliability = system_rel(combinations,W,R, n, k)
+
+disp("time elapsed: " + toc + " s");
 
 %calculates system reliability
 function system_prob = system_rel(combinations,W,R, n, k)
@@ -41,6 +47,7 @@ function system_prob = system_rel(combinations,W,R, n, k)
             system_prob = system_prob + comb_prob;
         end
     end
+    system_prob = vpa(system_prob);
     return;
 end
 

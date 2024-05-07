@@ -1,0 +1,70 @@
+%% Algorithm for plotting base2system %%
+
+clear
+clc
+
+digits(1000);
+
+[S, n, k] = Node.import_system('base2.xlsx');
+tic;
+
+nrOfTimes = cell(1, n);
+    for i = 1:numel(nrOfTimes)
+        nrOfTimes{i} = 0;
+    end
+
+R = base2SystemReliability(S,n,k,25) %ca 570s med 25 iterationer, är bara till för illustrering 
+R_numeric = [];
+
+for i = 1:numel(R)  %convert from cell to numeric array for plotting.
+    R_numeric(i) = R{i};
+end
+
+plot(1:numel(R_numeric), R_numeric, '-o');
+
+xlabel('Number of Iterations');
+ylabel('System Reliability');   
+title('System Reliability for Base2');
+
+disp("" + k + "-out-of-" + n)
+disp("Elapsed time: " + toc + " s")
+
+function reliabilityGraph = base2SystemReliability(S, n, k, iter)
+    reliability = {};
+    reliabilityGraph = {higashiyama(n,k,S)};
+    
+
+    for i=2:iter+1 %add desired nrOfIterations
+        for j=1:n
+            S{j}.weight = S{j}.weight + nrOfTimes{j};
+        end
+        
+        for m=1:n 
+            S{m}.weight = S{m}.weight + 1;
+            reliability{m} = higashiyama(n,k,S);
+            S{m}.weight = S{m}.weight - 1;
+        end
+        
+        Stemp = S;
+        newNode = Node(S{end}.index+1,1,S{1}.reliability); %new node with weight 1.
+        Stemp{end + 1} = newNode;
+        newNodeSysRel = higashiyama(n+1,k,Stemp);
+        
+        for a=1:n 
+            if(reliability{a}==max(cellfun(@max,reliability)))
+                maxIndex = a;
+                break;
+            end
+        end
+        if(newNodeSysRel>reliability{maxIndex}) %check if new node is better
+            S{end+1} = newNode;
+            nrOfTimes{end+1} = 1;
+            n = n + 1;
+            reliabilityGraph{i} = newNodeSysRel;
+        else                                    %or not
+            nrOfTimes{maxIndex} = nrOfTimes{maxIndex} + 1;  
+            reliabilityGraph{i} = reliability{maxIndex};
+        end
+        T = nrOfTimes
+    end
+end

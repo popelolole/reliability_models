@@ -8,7 +8,7 @@ digits(1000);
 [S, n, k] = Node.import_system('base2.xlsx');
 tic;
 
-[R,nrOfTimes] = base2SystemReliability(S,n,k,25) %ca 570s med 25 iterationer, är bara till för illustrering så de lallish
+[R,nrOfTimes] = base2SystemReliability(S,n,k,100) %100 iterationer tar ca 430 vilket är tillräcklig för illustrering.
 R_numeric = [];
 nrOfTimes_numeric = [];
 
@@ -61,8 +61,10 @@ function [reliabilityGraph, nrOfTimes] = base2SystemReliability(S, n, k, iter)
         Stemp{end + 1} = newNode;
         newNodeSysRel = higashiyama(n+1,k,Stemp);
         
+        %find index for the best reliability
+        maxReliability = max(cellfun(@max,reliability));
         for a=1:n 
-            if(reliability{a}==max(cellfun(@max,reliability)))
+            if(reliability{a}==maxReliability)
                 maxIndex = a;
                 break;
             end

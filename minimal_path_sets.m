@@ -9,7 +9,7 @@ N = [Node(1, 2, 0.7)];
 
 digits(1000);
 
-[S, n, k] = Node.import_system('test.xlsx');
+[S, n, k] = Node.import_system('base3.xlsx');
 
 S = Node.sortByWeight(S);
 

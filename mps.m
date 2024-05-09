@@ -62,7 +62,7 @@ function [r] = sdp_method(S)
         inner_expression = {};
         for j = 1:i - 1
             inner_expression = Node.union(inner_expression, ...
-                Node.diff(S{j}, S{i}));
+                {Node.diff(S{j}, S{i})});
         end
         r = sym(r + prob(S{i}) * (probC(inner_expression)));
     end
@@ -72,14 +72,30 @@ end
 function result = prob(s)
     result = 1;
     for i = 1:length(s)
-        result = sym(result * s{i}.reliability);
+        S = s{i};
+        if isa(S, 'cell')
+            for m = 1:length(S)
+                result = sym(result * S{m}.reliability);
+            end
+        else
+            result = sym(result * S.reliability);
+        end
     end
 end
 
 function result = probC(s)
     result = 1;
     for i = 1:length(s)
-        result = sym(result * (1 - s{i}.reliability));
+        S = s{i};
+        if isa(S, 'cell')
+            p = 1;
+            for m = 1:length(S)
+                p = sym(p * S{m}.reliability);
+            end
+            result = sym(result * (1 - p));
+        else
+            result = sym(result * (1 - S.reliability));
+        end
     end
     
     %result = 1;

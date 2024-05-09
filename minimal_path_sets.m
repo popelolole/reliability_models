@@ -15,5 +15,7 @@ S = Node.sortByWeight(S);
 
 %R = mps(A,3,5)
 % r = mps(A, 3, 8);
+tic;
 r = mps(S, n, k)
+disp("Elapsed time: " + toc + " s")
 %r = mps(B, 4, 30)

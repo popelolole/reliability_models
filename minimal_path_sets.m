@@ -9,7 +9,7 @@ N = [Node(1, 2, 0.7)];
 
 digits(1000);
 
-[S, n, k] = Node.import_system('base3.xlsx');
+[S, n, k] = Node.import_system('base2.xlsx');
 
 S = Node.sortByWeight(S);
 
@@ -17,5 +17,20 @@ S = Node.sortByWeight(S);
 % r = mps(A, 3, 8);
 tic;
 r = mps(S, n, k)
-disp("Elapsed time: " + toc + " s")
+%MPS = find_minimal_path_sets(S,n,k);
+elapsedTime = toc;
+
+%disp("Total num of mps: " + length(MPS));
+
+%s_length = zeros(10);
+%for i = 1:length(MPS)
+%    s_length(length(MPS{i})) = s_length(length(MPS{i})) + 1;
+%end
+
+%for i = 1:length(s_length)
+%    disp(i + ": " + s_length(i))
+%end
+
+disp("Elapsed time: " + elapsedTime + " s")
+
 %r = mps(B, 4, 30)

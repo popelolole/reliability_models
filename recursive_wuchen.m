@@ -3,7 +3,7 @@ clear
 
 digits(1000);
 
-[S, n, k] = Node.import_system('test.xlsx');
+[S, n, k] = Node.import_system('base2.xlsx');
 
 tic;
 R = higashiyama(n, k, S)

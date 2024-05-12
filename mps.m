@@ -1,6 +1,8 @@
 % A: array of Node instances
 function [R] = mps(A,n,k)
+    tic;
     S = find_minimal_path_sets(A,n,k);
+    elapsedTime = toc;
 
     s_length = zeros(10);
 
@@ -26,34 +28,12 @@ function [R] = mps(A,n,k)
     % At this point we have R = P(S{1} u S{2} u ... u S{n})
     % So reliability is calculated using some method, in this case sum of
     % disjoint products (sdp).
-
-    R = sdp_method(S);
-end
-
-function [S] = find_minimal_path_sets(A,n,k)
     
-    current_path = {};
-    minimal_paths = {};
+    disp("Elapsed time for finding mps algorithm: " + elapsedTime + " s")
 
-    S = backtrack(A, current_path, minimal_paths, 0, 0, k);
-
-    function minimal_paths = backtrack(A, current_path, minimal_paths, tot, index, k)
-        if tot >= k
-            minimal_paths{end + 1} = current_path;
-            return;
-        elseif index > length(A)
-            return;
-        end
-
-        index = index + 1;
-        for i = index:length(A)
-            current_path{end + 1} = A{i};
-            tot = tot + A{i}.weight;
-            minimal_paths = backtrack(A, current_path, minimal_paths, tot, i, k);
-            tot = tot - A{i}.weight;
-            current_path = current_path(1:end-1);
-        end
-    end
+    tic;
+    R = sdp_method(S);
+    disp("Elapsed time for sdp method: " + toc + " s")
 end
 
 function [r] = sdp_method(S)

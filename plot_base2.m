@@ -8,7 +8,7 @@ digits(1000);
 [S, n, k] = Node.import_system('base2.xlsx');
 tic;
 
-[R,nrOfTimes] = base2SystemReliability(S,n,k,100) %100 iterationer tar ca 430 vilket är tillräcklig för illustrering.
+[R,nrOfTimes] = base2SystemReliability(S,n,k,50) %50 iterationer tar ca 2150 vilket är mkt men för illustrering.
 R_numeric = [];
 nrOfTimes_numeric = [];
 
@@ -46,10 +46,6 @@ function [reliabilityGraph, nrOfTimes] = base2SystemReliability(S, n, k, iter)
     end
 
     for i=2:iter+1 %add desired nrOfIterations
-        for j=1:n
-            S{j}.weight = S{j}.weight + nrOfTimes{j};
-        end
-        
         for m=1:n 
             S{m}.weight = S{m}.weight + 1;
             reliability{m} = higashiyama(n,k,S);
@@ -69,7 +65,7 @@ function [reliabilityGraph, nrOfTimes] = base2SystemReliability(S, n, k, iter)
                 break;
             end
         end
-        if(newNodeSysRel>reliability{maxIndex}) %check if new node is better
+        if(newNodeSysRel>=reliability{maxIndex}) %check if new node is better
             S{end+1} = newNode;
             nrOfTimes{end+1} = 1;
             n = n + 1;
@@ -77,6 +73,7 @@ function [reliabilityGraph, nrOfTimes] = base2SystemReliability(S, n, k, iter)
         else                                    %or not
             nrOfTimes{maxIndex} = nrOfTimes{maxIndex} + 1;  
             reliabilityGraph{i} = reliability{maxIndex};
+            S{maxIndex}.weight = S{maxIndex}.weight + 1;
         end
         T = nrOfTimes
     end

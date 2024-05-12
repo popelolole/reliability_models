@@ -63,7 +63,6 @@ classdef Node
             for i = 1:length(a)
                 A = a{i};
                 if isa(A, "cell")
-                    diff_elements = {};
                     for m = 1:length(A)
                         ismember = false;
                         for j = 1:length(S)
@@ -81,15 +80,9 @@ classdef Node
                             end
                         end
                         if ismember == false
-                            diff_elements{end + 1} = A{m};
+                            S{end + 1} = A;
                         end
                     end
-                    if length(diff_elements) == 1
-                        S{end + 1} = diff_elements{1};
-                    elseif ~isempty(diff_elements)
-                        S{end + 1} = diff_elements;
-                    end
-
                 else
                     ismember = false;
                     for j = 1:length(S)
@@ -114,7 +107,6 @@ classdef Node
             for i = 1:length(b)
                 B = b{i};
                 if isa(B, "cell")
-                    diff_elements = {};
                     for m = 1:length(B)
                         ismember = false;
                         for j = 1:length(S)
@@ -132,13 +124,8 @@ classdef Node
                             end
                         end
                         if ismember == false
-                            diff_elements{end + 1} = B{m};
+                            S{end + 1} = B;
                         end
-                    end
-                    if length(diff_elements) == 1
-                        S{end + 1} = diff_elements{1};
-                    elseif ~isempty(diff_elements)
-                        S{end + 1} = diff_elements;
                     end
                 else
                     ismember = false;

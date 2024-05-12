@@ -9,11 +9,13 @@ N = [Node(1, 2, 0.7)];
 
 digits(1000);
 
-[S, n, k] = Node.import_system('test.xlsx');
+[S, n, k] = Node.import_system('base3.xlsx');
 
 S = Node.sortByWeight(S);
 
 %R = mps(A,3,5)
 % r = mps(A, 3, 8);
+tic;
 r = mps(S, n, k)
+disp("Elapsed time: " + toc + " s")
 %r = mps(B, 4, 30)

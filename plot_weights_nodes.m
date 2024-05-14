@@ -1,3 +1,6 @@
+clc;
+clear;
+
 [S, n, k] = Node.import_system('experiment.xlsx');
 
 figure;

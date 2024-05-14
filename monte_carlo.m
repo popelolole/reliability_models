@@ -3,9 +3,9 @@ clc
 
 digits(1000)
 
-[S, n, k] = Node.import_system('base2.xlsx');
+[S, n, k] = Node.import_system('base1.xlsx');
 
-iterations = 100000000; 
+iterations = 1000; 
 
 disp("**Monte Carlo Simulation**")
 tic;
